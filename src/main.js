@@ -1,4 +1,5 @@
 import Vue from "vue";
+import "./plugins/Bugsnag.js";
 import "./plugins/Firebase.js";
 import App from "./App.vue";
 

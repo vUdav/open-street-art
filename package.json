@@ -8,8 +8,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "vue": "^2.5.17",
+    "bugsnag-js": "^4.7.3",
+    "bugsnag-vue": "^1.0.1",
     "firebase": "^5.5.8",
+    "vue": "^2.5.17",
     "vuefire": "^1.4.5"
   },
   "devDependencies": {
