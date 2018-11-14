@@ -1,14 +1,12 @@
 <template>
-  <div id="app">
-    <Map />
-  </div>
+  <MainLayout id="app" />
 </template>
 
 <script>
-import Map from "./components/Map";
+import MainLayout from "./components/layouts/MainLayout/MainLayout";
 
 export default {
-  components: {Map}
+  components: { MainLayout }
 }
 </script>
 

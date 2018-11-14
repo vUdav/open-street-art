@@ -1,20 +1,18 @@
 <template>
-  <div>
-    <l-map
-      :zoom="13"
-      :center="[51.505, -0.09]"
-      style="height: 500px"
-    >
-      <l-tile-layer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <l-marker
-        :lat-lng="marker"
-        :icon="icon"
-      />
-    </l-map>
-  </div>
+  <l-map
+    :zoom="13"
+    :center="[51.505, -0.09]"
+    class="map"
+  >
+    <l-tile-layer
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    />
+    <l-marker
+      :lat-lng="marker"
+      :icon="icon"
+    />
+  </l-map>
 </template>
 
 <script>
@@ -45,6 +43,10 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 @import "~leaflet/dist/leaflet.css";
+
+.map {
+  height: 100vh;
+}
 </style>
