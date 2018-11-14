@@ -1,7 +1,10 @@
 import Vue from "vue";
+import App from "./App.vue";
+
+// Plugins
 import "./plugins/Bugsnag.js";
 import "./plugins/Firebase.js";
-import App from "./App.vue";
+import "./plugins/Element.js";
 
 Vue.config.productionTip = false;
 
