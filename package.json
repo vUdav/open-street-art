@@ -12,6 +12,7 @@
     "bugsnag-vue": "^1.0.1",
     "firebase": "^5.5.8",
     "vue": "^2.5.17",
+    "vue2-leaflet": "^1.2.3",
     "vuefire": "^1.4.5"
   },
   "devDependencies": {
