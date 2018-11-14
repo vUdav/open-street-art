@@ -1,3 +1,12 @@
 // Normalize
-@import 'normalize-scss';
+@import "normalize-scss";
 @include normalize();
+
+// Font
+@import url("https://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic");
+
+// Main styles
+
+body {
+  font-family: "Ubuntu", sans-serif;
+}
