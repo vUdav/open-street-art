@@ -6,6 +6,8 @@ import "./plugins/Bugsnag.js";
 import "./plugins/Firebase.js";
 import "./plugins/Element.js";
 
+import "./assets/scss/common.scss";
+
 Vue.config.productionTip = false;
 
 new Vue({
