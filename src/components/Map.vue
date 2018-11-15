@@ -1,30 +1,30 @@
 <template>
-<div>
-  <l-map
-    :zoom="10"
-    :center="[59.934280, 30.335098]"
-    class="map"
-  >
-    <l-tile-layer
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  <div>
+    <l-map
+      :zoom="$store.state.mapSettings.zoom"
+      :center="$store.state.mapSettings.center"
+      class="map"
+      @click="clickOnMap"
+    >
+      <l-tile-layer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution="&copy; <a href='http://osm.org/copyrighte'>OpenStreetMap</a> contributors"
+      />
+      <l-marker
+        v-for="(object, index) in objects"
+        :key="index"
+        :lat-lng="getPosition(object.position)"
+        :icon="icon"
+        @click="openObjectDetail(index)"
+      />
+    </l-map>
+    <Detail
+      v-if="objects[openedObjectIndex]"
+      :data="objects[openedObjectIndex]"
+      :isObjectDetailOpen="isObjectDetailOpen"
+      :beforeClose="closeObjectDetail"
     />
-    <l-marker
-      v-for="(object, index) in objects"
-      :key="index"
-      :lat-lng="getPosition(object.position)"
-      :icon="icon"
-      @click="openObjectDetail(index)"
-    />
-  </l-map>
-
-  <Detail
-    v-if="objects[openedObjectIndex]"
-    :data="objects[openedObjectIndex]"
-    :isObjectDetailOpen="isObjectDetailOpen"
-    :beforeClose="closeObjectDetail"
-  />
-</div>
+  </div>
 </template>
 
 <script>
@@ -57,22 +57,26 @@ export default {
       openedObjectIndex: null
     }
   },
-  firestore: function() {
+  firestore: function () {
     return {
       objects: db.collection("geo-objects")
     }
   },
   methods: {
     getPosition: position => {
-       return L.latLng(position.latitude, position.longitude)
+      return L.latLng(position.latitude, position.longitude)
     },
-    openObjectDetail: function(index) {
+    openObjectDetail: function (index) {
       this.isObjectDetailOpen = true;
       this.openedObjectIndex = index;
     },
-    closeObjectDetail: function() {
+    closeObjectDetail: function () {
       this.isObjectDetailOpen = false;
       this.openedObjectIndex = null;
+    },
+    clickOnMap: function (e) {
+      if (this.$store.state.mapSettings.isAddingPoint)
+        console.log(e.latlng);
     }
   }
 };

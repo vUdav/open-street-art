@@ -15,7 +15,8 @@
     "normalize-scss": "^7.0.1",
     "vue": "^2.5.17",
     "vue2-leaflet": "^1.2.3",
-    "vuefire": "^2.0.0-alpha.15"
+    "vuefire": "^2.0.0-alpha.15",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.1.1",
