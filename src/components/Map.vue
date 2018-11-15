@@ -3,7 +3,7 @@
     <l-map
       :zoom="$store.state.mapSettings.zoom"
       :center="$store.state.mapSettings.center"
-      class="map"
+      :class="['map', { 'map--adding-point': $store.state.mapSettings.isAddingPoint }]"
       @click="clickOnMap"
     >
       <l-tile-layer
@@ -54,7 +54,8 @@ export default {
       }),
       objects: [],
       isObjectDetailOpen: false,
-      openedObjectIndex: null
+      openedObjectIndex: null,
+      addingPointPosition: null
     }
   },
   firestore: function () {
@@ -76,7 +77,7 @@ export default {
     },
     clickOnMap: function (e) {
       if (this.$store.state.mapSettings.isAddingPoint)
-        console.log(e.latlng);
+        this.addingPointPosition = e.latlng;
     }
   }
 };
@@ -87,5 +88,14 @@ export default {
 
 .map {
   height: 100vh;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &--adding-point {
+    cursor: crosshair;
+  }
 }
 </style>
