@@ -1,7 +1,7 @@
 <template>
   <l-map
-    :zoom="13"
-    :center="[51.505, -0.09]"
+    :zoom="10"
+    :center="[59.934280, 30.335098]"
     class="map"
   >
     <l-tile-layer
@@ -9,7 +9,9 @@
       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     />
     <l-marker
-      :lat-lng="marker"
+      v-for="(object, idx) in objects"
+      :key="idx"
+      :lat-lng="getPosition(object.position)"
       :icon="icon"
     />
   </l-map>
@@ -19,9 +21,10 @@
 import { L, LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 import MarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import MarkerIconShadow from 'leaflet/dist/images/marker-shadow.png';
+import db from "../plugins/Firebase.js";
 
 export default {
-  name: 'Example',
+  name: 'Map',
   components: {
     LMap,
     LTileLayer,
@@ -29,7 +32,6 @@ export default {
   },
   data() {
     return {
-      marker: L.latLng(51.505, -0.09),
       icon: L.icon({
         iconUrl: MarkerIcon,
         iconSize: [26, 42],
@@ -37,7 +39,18 @@ export default {
         shadowUrl: MarkerIconShadow,
         shadowSize: [41, 41],
         shadowAnchor: [13, 41]
-      })
+      }),
+      objects: []
+    }
+  },
+  firestore: function() {
+    return {
+      objects: db.collection("geo-objects")
+    }
+  },
+  methods: {
+    getPosition: position => {
+       return L.latLng(position.latitude, position.longitude)
     }
   }
 };
