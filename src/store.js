@@ -9,6 +9,11 @@ export default new Vuex.Store({
       zoom: 10,
       center: [59.93428, 30.335098],
       isAddingPoint: false
+    },
+    layerSettings: {
+      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      attribution:
+        "&copy; <a href='http://osm.org/copyrighte'>OpenStreetMap</a> contributors"
     }
   },
 

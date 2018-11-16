@@ -7,8 +7,8 @@
       @click="clickOnMap"
     >
       <l-tile-layer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution="&copy; <a href='http://osm.org/copyrighte'>OpenStreetMap</a> contributors"
+        :url="$store.state.layerSettings.url"
+        :attribution="$store.state.layerSettings.attribution"
       />
       <l-marker
         v-for="(object, index) in objects"
@@ -24,6 +24,12 @@
       :isObjectDetailOpen="isObjectDetailOpen"
       :beforeClose="closeObjectDetail"
     />
+    <AddingForm
+      v-if="addingPointPosition"
+      :isAddingFormOpen="isAddingFormOpen"
+      :closeAddingForm="closeAddingForm"
+      :addingPointPosition="addingPointPosition"
+    />
   </div>
 </template>
 
@@ -33,6 +39,7 @@ import MarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import MarkerIconShadow from 'leaflet/dist/images/marker-shadow.png';
 import db from "../plugins/Firebase.js";
 import Detail from "./Detail";
+import AddingForm from "./AddingForm";
 
 export default {
   name: 'Map',
@@ -40,7 +47,8 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    Detail
+    Detail,
+    AddingForm
   },
   data() {
     return {
@@ -55,7 +63,8 @@ export default {
       objects: [],
       isObjectDetailOpen: false,
       openedObjectIndex: null,
-      addingPointPosition: null
+      addingPointPosition: null,
+      isAddingFormOpen: false
     }
   },
   firestore: function () {
@@ -76,8 +85,16 @@ export default {
       this.openedObjectIndex = null;
     },
     clickOnMap: function (e) {
-      if (this.$store.state.mapSettings.isAddingPoint)
+      if (this.$store.state.mapSettings.isAddingPoint) {
         this.addingPointPosition = e.latlng;
+        this.openAddingForm();
+      }
+    },
+    openAddingForm: function () {
+      this.isAddingFormOpen = true;
+    },
+    closeAddingForm: function () {
+      this.isAddingFormOpen = false;
     }
   }
 };
