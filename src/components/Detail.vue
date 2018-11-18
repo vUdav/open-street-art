@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { storage } from "../plugins/Firebase.js";
+import { objectsRef } from "../plugins/Firebase.js";
 export default {
   name: 'Detail',
   props: {
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     getImgPath: function () {
-      const imgRef = storage.ref().child(process.env.VUE_APP_STORAGE_OBJECTS_PATH).child(this.data.imgName);
+      const imgRef = objectsRef.child(this.data.imgName);
       imgRef.getDownloadURL().then((url) => {
         this.imgUrl = url;
       }).catch((error) => {

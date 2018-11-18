@@ -20,8 +20,11 @@ const db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 
-// Bucket
+// Storage
 export const storage = firebase.storage();
+export const objectsRef = storage
+  .ref()
+  .child(process.env.VUE_APP_STORAGE_OBJECTS_PATH);
 
 // Classes
 export const GeoPoint = firebase.firestore.GeoPoint;
