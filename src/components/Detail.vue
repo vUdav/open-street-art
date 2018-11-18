@@ -1,27 +1,25 @@
 <template>
-  <el-dialog
-    :title="data.name"
-    :visible.sync="isObjectDetailOpen"
-    :before-close="beforeClose"
-  >
-    <img :src="data.imgUrl" :alt="data.name" width="100%">
-    <div v-html="data.description" />
-    <hr />
-    <h2>Автор</h2>
-    <p>{{ data.artist.name }}</p>
-    <p>Контакты:</p>
-    <ul>
-      <li
-        v-for="(link, index) in data.artist.links"
-        :key="index"
-      >
-        <a :href="link" target="_blank">{{ link }}</a>
-      </li>
-    </ul>
+  <el-dialog :title="data.name" :visible.sync="isObjectDetailOpen" :before-close="beforeClose">
+    <img v-if="imgUrl" :src="imgUrl" :alt="data.name" width="100%">
+    <div v-if="data.description" v-html="data.description"/>
+    <hr>
+    <div v-if="data.artist.name">
+      <h2>Автор</h2>
+      <p>{{ data.artist.name }}</p>
+      <div v-if="data.artist.links">
+        <p>Контакты:</p>
+        <ul>
+          <li v-for="(link, index) in data.artist.links" :key="index">
+            <a :href="link" target="_blank">{{ link }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </el-dialog>
 </template>
 
 <script>
+import { objectsRef } from "../plugins/Firebase.js";
 export default {
   name: 'Detail',
   props: {
@@ -34,6 +32,24 @@ export default {
       default: false
     },
     beforeClose: Function
+  },
+  data() {
+    return {
+      imgUrl: ''
+    };
+  },
+  methods: {
+    getImgPath: function () {
+      const imgRef = objectsRef.child(this.data.imgName);
+      imgRef.getDownloadURL().then((url) => {
+        this.imgUrl = url;
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
+  },
+  created() {
+    this.getImgPath();
   }
 }
 </script>

@@ -1,30 +1,36 @@
 <template>
-<div>
-  <l-map
-    :zoom="10"
-    :center="[59.934280, 30.335098]"
-    class="map"
-  >
-    <l-tile-layer
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  <div>
+    <l-map
+      :zoom="$store.state.mapSettings.zoom"
+      :center="$store.state.mapSettings.center"
+      :class="['map', { 'map--adding-point': $store.state.mapSettings.isAddingPoint }]"
+      @click="clickOnMap"
+    >
+      <l-tile-layer
+        :url="$store.state.layerSettings.url"
+        :attribution="$store.state.layerSettings.attribution"
+      />
+      <l-marker
+        v-for="(object, index) in objects"
+        :key="index"
+        :lat-lng="getPosition(object.position)"
+        :icon="icon"
+        @click="openObjectDetail(index)"
+      />
+    </l-map>
+    <Detail
+      v-if="objects[openedObjectIndex]"
+      :data="objects[openedObjectIndex]"
+      :isObjectDetailOpen="isObjectDetailOpen"
+      :beforeClose="closeObjectDetail"
     />
-    <l-marker
-      v-for="(object, index) in objects"
-      :key="index"
-      :lat-lng="getPosition(object.position)"
-      :icon="icon"
-      @click="openObjectDetail(index)"
+    <AddingForm
+      v-if="addingPointPosition"
+      :isAddingFormOpen="isAddingFormOpen"
+      :closeAddingForm="closeAddingForm"
+      :addingPointPosition="addingPointPosition"
     />
-  </l-map>
-
-  <Detail
-    v-if="objects[openedObjectIndex]"
-    :data="objects[openedObjectIndex]"
-    :isObjectDetailOpen="isObjectDetailOpen"
-    :beforeClose="closeObjectDetail"
-  />
-</div>
+  </div>
 </template>
 
 <script>
@@ -33,6 +39,7 @@ import MarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import MarkerIconShadow from 'leaflet/dist/images/marker-shadow.png';
 import db from "../plugins/Firebase.js";
 import Detail from "./Detail";
+import AddingForm from "./AddingForm";
 
 export default {
   name: 'Map',
@@ -40,7 +47,8 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    Detail
+    Detail,
+    AddingForm
   },
   data() {
     return {
@@ -54,25 +62,39 @@ export default {
       }),
       objects: [],
       isObjectDetailOpen: false,
-      openedObjectIndex: null
+      openedObjectIndex: null,
+      addingPointPosition: null,
+      isAddingFormOpen: false
     }
   },
-  firestore: function() {
+  firestore: function () {
     return {
       objects: db.collection("geo-objects")
     }
   },
   methods: {
     getPosition: position => {
-       return L.latLng(position.latitude, position.longitude)
+      return L.latLng(position.latitude, position.longitude)
     },
-    openObjectDetail: function(index) {
+    openObjectDetail: function (index) {
       this.isObjectDetailOpen = true;
       this.openedObjectIndex = index;
     },
-    closeObjectDetail: function() {
+    closeObjectDetail: function () {
       this.isObjectDetailOpen = false;
       this.openedObjectIndex = null;
+    },
+    clickOnMap: function (e) {
+      if (this.$store.state.mapSettings.isAddingPoint) {
+        this.addingPointPosition = e.latlng;
+        this.openAddingForm();
+      }
+    },
+    openAddingForm: function () {
+      this.isAddingFormOpen = true;
+    },
+    closeAddingForm: function () {
+      this.isAddingFormOpen = false;
     }
   }
 };
@@ -83,5 +105,14 @@ export default {
 
 .map {
   height: 100vh;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &--adding-point {
+    cursor: crosshair;
+  }
 }
 </style>
