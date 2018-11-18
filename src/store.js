@@ -1,5 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { L } from "vue2-leaflet";
+import MarkerIcon from "leaflet/dist/images/marker-icon-2x.png";
+import MarkerIconShadow from "leaflet/dist/images/marker-shadow.png";
 
 Vue.use(Vuex);
 
@@ -14,6 +17,16 @@ export default new Vuex.Store({
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
         "&copy; <a href='http://osm.org/copyrighte'>OpenStreetMap</a> contributors"
+    },
+    markerSettings: {
+      defaultIcon: L.icon({
+        iconUrl: MarkerIcon,
+        iconSize: [26, 42],
+        iconAnchor: [13, 42],
+        shadowUrl: MarkerIconShadow,
+        shadowSize: [41, 41],
+        shadowAnchor: [13, 41]
+      })
     }
   },
 

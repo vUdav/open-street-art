@@ -27,10 +27,10 @@
 <script>
 export default {
   methods: {
-    onClickAddObject: function () {
+    onClickAddObject() {
       this.$store.commit('enableAddingPoint');
     },
-    cancelAddingObject: function () {
+    cancelAddingObject() {
       this.$store.commit('disableAddingPoint');
     }
   }

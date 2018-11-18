@@ -1,14 +1,14 @@
 <template>
   <el-main class="main">
-    <Map />
+    <Map/>
   </el-main>
 </template>
 
 <script>
-import Map from "../../Map";
+import Map from "@/components/Map";
 
 export default {
-  components: { Map }  
+  components: { Map }
 }
 </script>
 

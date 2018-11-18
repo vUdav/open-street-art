@@ -1,10 +1,7 @@
 <template>
-  <el-container
-    direction="vertical"
-    class="main-layout"
-  >
-    <Header />
-    <Main />
+  <el-container direction="vertical" class="main-layout">
+    <Header/>
+    <Main/>
   </el-container>
 </template>
 

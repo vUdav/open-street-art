@@ -11,9 +11,12 @@
           :url="$store.state.layerSettings.url"
           :attribution="$store.state.layerSettings.attribution"
         />
-        <l-marker :lat-lng="getPosition(addingPointPosition)" :icon="icon"/>
+        <l-marker
+          :lat-lng="getPosition(addingPointPosition)"
+          :icon="$store.state.markerSettings.defaultIcon"
+        />
       </l-map>
-      <el-form :model="objectForm" :label-width="formLabelWidth" ref="objectForm">
+      <el-form :model="objectForm" label-width="150px" ref="objectForm">
         <el-form-item
           label="Название работы"
           prop="name"
@@ -47,22 +50,21 @@
             { required: true, message: 'Загрузить изображение' }
           ]"
         >
-          <el-input type="file" @change="getFile" class="uploadImg"/>
+          <el-input type="file" @change="getFile" v-model="objectForm.img" class="uploadImg"/>
         </el-form-item>
       </el-form>
     </span>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="resetForm('objectForm')">Отменить</el-button>
+      <el-button @click="closeForm('objectForm')">Отменить</el-button>
       <el-button type="primary" @click="submitForm('objectForm')">Добавить</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
-import { L, LMap, LTileLayer, LMarker } from 'vue2-leaflet';
-import MarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
-import MarkerIconShadow from 'leaflet/dist/images/marker-shadow.png';
-import db, { GeoPoint, objectsRef } from "../plugins/Firebase.js";
+import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import { getMarkerPosition } from "@/plugins/LeafletHelpers.js";
+import db, { GeoPoint, objectsRef } from "@/plugins/Firebase.js";
 
 export default {
   name: 'AddingForm',
@@ -84,43 +86,38 @@ export default {
   },
   data() {
     return {
-      icon: L.icon({
-        iconUrl: MarkerIcon,
-        iconSize: [26, 42],
-        iconAnchor: [13, 42],
-        shadowUrl: MarkerIconShadow,
-        shadowSize: [41, 41],
-        shadowAnchor: [13, 41]
-      }),
       objectForm: {
         name: '',
         artist: '',
         description: '',
-        img: null
+        img: ''
       },
-      formLabelWidth: "150px",
+      imgFile: null,
       artists: [],
       isAdding: false
     }
   },
-  firestore: function () {
+  firestore() {
+    const artists = db.collection(process.env.VUE_APP_FIRESTORE_ARTISTS_REF);
+
     return {
-      artists: db.collection("artists")
+      artists
     }
   },
   methods: {
-    submitForm: function (formName) {
+    submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           this.isAdding = true;
+
           const name = this.objectForm.name;
           const description = this.objectForm.description;
           const createdAt = new Date();
           const position = new GeoPoint(this.addingPointPosition.lat, this.addingPointPosition.lng);
-          const artist = this.objectForm.artist ? db.doc(`artists/${this.objectForm.artist}`) : db.doc('artists/other');
+          const artist = this.objectForm.artist ? db.doc(`${process.env.VUE_APP_FIRESTORE_ARTISTS_REF}/${this.objectForm.artist}`) : db.doc(`${process.env.VUE_APP_FIRESTORE_ARTISTS_REF}/${process.env.VUE_APP_FIRESTORE_UNKNOWN_ARTISTS_REF}`);
           const imgName = await this.uploadImg();
 
-          await db.collection('geo-objects').add({
+          await db.collection(process.env.VUE_APP_FIRESTORE_OBJECTS_REF).add({
             name,
             description,
             artist,
@@ -129,28 +126,32 @@ export default {
             imgName
           });
 
-          this.doneAdding();
+          this.doneAdding(formName);
         }
       });
     },
-    resetForm: function (formName) {
-      this.$refs[formName].resetFields();
+    closeForm(formName) {
+      this.resetForm(formName)
       this.closeAddingForm();
     },
-    getPosition: position => {
-      return L.latLng(position.lat, position.lng)
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+      document.querySelector('.uploadImg input').value = '';
     },
-    doneAdding: function () {
+    getPosition(position) {
+      return getMarkerPosition(position.lat, position.lng)
+    },
+    doneAdding(formName) {
       this.isAdding = false;
-      this.resetForm('objectForm');
+      this.closeForm(formName);
       this.$store.commit('disableAddingPoint');
     },
-    getFile: function () {
+    getFile() {
       const file = document.querySelector('.uploadImg input').files[0];
-      this.objectForm.img = file;
+      this.imgFile = file;
     },
-    uploadImg: async function () {
-      const file = this.objectForm.img;
+    async uploadImg() {
+      const file = this.imgFile;
       const name = `${(+new Date())} - ${file.name}`;
       const metadata = {
         contentType: file.type

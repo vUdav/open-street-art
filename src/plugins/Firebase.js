@@ -24,7 +24,7 @@ db.settings(settings);
 export const storage = firebase.storage();
 export const objectsRef = storage
   .ref()
-  .child(process.env.VUE_APP_STORAGE_OBJECTS_PATH);
+  .child(process.env.VUE_APP_STORAGE_OBJECTS_REF);
 
 // Classes
 export const GeoPoint = firebase.firestore.GeoPoint;

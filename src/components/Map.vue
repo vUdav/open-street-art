@@ -14,7 +14,7 @@
         v-for="(object, index) in objects"
         :key="index"
         :lat-lng="getPosition(object.position)"
-        :icon="icon"
+        :icon="$store.state.markerSettings.defaultIcon"
         @click="openObjectDetail(index)"
       />
     </l-map>
@@ -34,12 +34,13 @@
 </template>
 
 <script>
-import { L, LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import { getMarkerPosition } from "@/plugins/LeafletHelpers.js";
 import MarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
 import MarkerIconShadow from 'leaflet/dist/images/marker-shadow.png';
-import db from "../plugins/Firebase.js";
-import Detail from "./Detail";
-import AddingForm from "./AddingForm";
+import db from "@/plugins/Firebase.js";
+import Detail from "@/components//Detail";
+import AddingForm from "@/components/AddingForm";
 
 export default {
   name: 'Map',
@@ -52,14 +53,6 @@ export default {
   },
   data() {
     return {
-      icon: L.icon({
-        iconUrl: MarkerIcon,
-        iconSize: [26, 42],
-        iconAnchor: [13, 42],
-        shadowUrl: MarkerIconShadow,
-        shadowSize: [41, 41],
-        shadowAnchor: [13, 41]
-      }),
       objects: [],
       isObjectDetailOpen: false,
       openedObjectIndex: null,
@@ -67,33 +60,36 @@ export default {
       isAddingFormOpen: false
     }
   },
-  firestore: function () {
+  firestore() {
+    const objects = db.collection(process.env.VUE_APP_FIRESTORE_OBJECTS_REF);
+
     return {
-      objects: db.collection("geo-objects")
+      objects
     }
+
   },
   methods: {
-    getPosition: position => {
-      return L.latLng(position.latitude, position.longitude)
+    getPosition(position) {
+      return getMarkerPosition(position.latitude, position.longitude)
     },
-    openObjectDetail: function (index) {
+    openObjectDetail(index) {
       this.isObjectDetailOpen = true;
       this.openedObjectIndex = index;
     },
-    closeObjectDetail: function () {
+    closeObjectDetail() {
       this.isObjectDetailOpen = false;
       this.openedObjectIndex = null;
     },
-    clickOnMap: function (e) {
+    clickOnMap(e) {
       if (this.$store.state.mapSettings.isAddingPoint) {
         this.addingPointPosition = e.latlng;
         this.openAddingForm();
       }
     },
-    openAddingForm: function () {
+    openAddingForm() {
       this.isAddingFormOpen = true;
     },
-    closeAddingForm: function () {
+    closeAddingForm() {
       this.isAddingFormOpen = false;
     }
   }

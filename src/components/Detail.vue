@@ -1,6 +1,8 @@
 <template>
   <el-dialog :title="data.name" :visible.sync="isObjectDetailOpen" :before-close="beforeClose">
-    <img v-if="imgUrl" :src="imgUrl" :alt="data.name" width="100%">
+    <div v-loading="!Boolean(imgUrl)" class="img-wrapper">
+      <img v-if="imgUrl" :src="imgUrl" :alt="data.name">
+    </div>
     <div v-if="data.description" v-html="data.description"/>
     <hr>
     <div v-if="data.artist.name">
@@ -19,7 +21,7 @@
 </template>
 
 <script>
-import { objectsRef } from "../plugins/Firebase.js";
+import { objectsRef } from "@/plugins/Firebase.js";
 export default {
   name: 'Detail',
   props: {
@@ -39,13 +41,11 @@ export default {
     };
   },
   methods: {
-    getImgPath: function () {
+    getImgPath() {
       const imgRef = objectsRef.child(this.data.imgName);
       imgRef.getDownloadURL().then((url) => {
         this.imgUrl = url;
-      }).catch((error) => {
-        console.error(error);
-      });
+      }).catch(console.error);
     }
   },
   created() {
@@ -53,3 +53,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.img-wrapper {
+  min-height: 150px;
+
+  img {
+    width: 100%;
+  }
+}
+</style>
