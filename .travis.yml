@@ -1,9 +1,15 @@
 language: node_js
 node_js:
-  - "10.4.0"
+  - 10.4.0
 cache:
   yarn: true
   directories:
-    - "node_modules"
+    - node_modules
 script:
   - yarn run build
+deploy:
+  provider: firebase
+  token:
+    secure: cb/pXoVw0YvrzFlIopzPZetmg08YSIPs3f2LBeTUKmFghVtWhuEGNqvsfrci1LtEg4u5gQQgQB8d4ax10GaNkqWO/04HgZNn/6Spfdhwrls+kIE9Z4auo/fdnyaiDPnxydStgRj0TaDkS7PBdT8wT0xg7nrco4iqpMb5TBR6fJrG65kpEcd5zjdLPrLKxUeurrPt/dyeo/TLecAq0H/ZjI8rXFISjW5FBcPZw9b2RyRN8q28KulNGHJUpoBV7WGnaWiR+cOckhjdAJAR28xo9P23lVmcQv+UylcPUCKgheoJ6DgNAqKq47TpLEKMDneRuKVeLIWdkW633Ke6JzYIBobPuqSltCD2N4xCB/hj49qcREG03OBdvQG+P7QEKNS1auGC806mk5ZeP2xQTX2n+4iMbQIq+NUjIeoiu0Ct6sG6HgTYdwL1nBfTQ4JOgAKMtCLmfGu1x/pxWIKm6wgCvBUhR/hkVBUy6C231vy+tCSce1QdoDlOlTsX3S7HCOYvxSXwCfz/qSoScFG4KhnRYy9wKobWzIVWu5N9BP72JQjv6/faredfCOntyVIw1rLxPqnGWpdBjfdf3/ekLwzGjAUQQo5lKKF+VJTi21SsEVnIHfsR3b7QoGX6vzK3zeA2Ms64Q/aLcZRSZukFBdh8v2BZ4uSBMnYtwhCiHTdc7xM=
+  on:
+    branch: develop
