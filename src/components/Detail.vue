@@ -45,7 +45,7 @@ export default {
       const imgRef = objectsRef.child(this.data.imgName);
       imgRef.getDownloadURL().then((url) => {
         this.imgUrl = url;
-      }).catch(console.error);
+      });
     }
   },
   created() {

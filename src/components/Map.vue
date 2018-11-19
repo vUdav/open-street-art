@@ -36,8 +36,6 @@
 <script>
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 import { getMarkerPosition } from "@/plugins/LeafletHelpers.js";
-import MarkerIcon from 'leaflet/dist/images/marker-icon-2x.png';
-import MarkerIconShadow from 'leaflet/dist/images/marker-shadow.png';
 import db from "@/plugins/Firebase.js";
 import Detail from "@/components//Detail";
 import AddingForm from "@/components/AddingForm";
