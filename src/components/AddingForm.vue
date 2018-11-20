@@ -26,7 +26,7 @@
         >
           <el-input v-model="objectForm.name"/>
         </el-form-item>
-        <el-form-item label="Автор">
+        <el-form-item label="Автор" prop="artist">
           <el-select v-model="objectForm.artist" filterable placeholder="Выбрать">
             <el-option
               v-for="(artist, index) in artists"
@@ -36,7 +36,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="Описание">
+        <el-form-item label="Описание" prop="description">
           <el-input
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 8}"
