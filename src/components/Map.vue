@@ -10,13 +10,15 @@
         :url="$store.state.layerSettings.url"
         :attribution="$store.state.layerSettings.attribution"
       />
-      <l-marker
-        v-for="(object, index) in objects"
-        :key="index"
-        :lat-lng="getPosition(object.position)"
-        :icon="$store.state.markerSettings.defaultIcon"
-        @click="openObjectDetail(index)"
-      />
+      <v-marker-cluster>
+        <l-marker
+          v-for="(object, index) in objects"
+          :key="index"
+          :lat-lng="getPosition(object.position)"
+          :icon="$store.state.markerSettings.defaultIcon"
+          @click="openObjectDetail(index)"
+        />
+      </v-marker-cluster>
     </l-map>
     <Detail
       v-if="objects[openedObjectIndex]"
@@ -35,6 +37,7 @@
 
 <script>
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster'
 import { getMarkerPosition } from "@/plugins/LeafletHelpers.js";
 import db from "@/plugins/Firebase.js";
 import Detail from "@/components//Detail";
@@ -47,7 +50,8 @@ export default {
     LTileLayer,
     LMarker,
     Detail,
-    AddingForm
+    AddingForm,
+    'v-marker-cluster': Vue2LeafletMarkerCluster
   },
   data() {
     return {
@@ -96,6 +100,8 @@ export default {
 
 <style lang="scss" scoped>
 @import "~leaflet/dist/leaflet.css";
+@import "~leaflet.markercluster/dist/MarkerCluster.css";
+@import "~leaflet.markercluster/dist/MarkerCluster.Default.css";
 
 .map {
   height: 100vh;
