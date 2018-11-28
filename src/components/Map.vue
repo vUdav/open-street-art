@@ -14,7 +14,7 @@
         <l-marker
           v-for="(object, index) in objects"
           :key="index"
-          :lat-lng="getPosition(object.position)"
+          :lat-lng="[object.position.latitude, object.position.longitude]"
           :icon="$store.state.markerSettings.defaultIcon"
           @click="openObjectDetail(index)"
         />
@@ -36,22 +36,21 @@
 </template>
 
 <script>
-import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
-import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster'
-import { getMarkerPosition } from "@/plugins/LeafletHelpers.js";
+import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
+import Vue2LeafletMarkerCluster from "vue2-leaflet-markercluster";
 import db from "@/plugins/Firebase.js";
 import Detail from "@/components//Detail";
 import AddingForm from "@/components/AddingForm";
 
 export default {
-  name: 'Map',
+  name: "Map",
   components: {
     LMap,
     LTileLayer,
     LMarker,
     Detail,
     AddingForm,
-    'v-marker-cluster': Vue2LeafletMarkerCluster
+    "v-marker-cluster": Vue2LeafletMarkerCluster
   },
   data() {
     return {
@@ -60,20 +59,16 @@ export default {
       openedObjectIndex: null,
       addingPointPosition: null,
       isAddingFormOpen: false
-    }
+    };
   },
   firestore() {
     const objects = db.collection(process.env.VUE_APP_FIRESTORE_OBJECTS_REF);
 
     return {
       objects
-    }
-
+    };
   },
   methods: {
-    getPosition(position) {
-      return getMarkerPosition(position.latitude, position.longitude)
-    },
     openObjectDetail(index) {
       this.isObjectDetailOpen = true;
       this.openedObjectIndex = index;

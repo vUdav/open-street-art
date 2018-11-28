@@ -12,7 +12,7 @@
           :attribution="$store.state.layerSettings.attribution"
         />
         <l-marker
-          :lat-lng="getPosition(addingPointPosition)"
+          :lat-lng="[addingPointPosition.lat, addingPointPosition.lng]"
           :icon="$store.state.markerSettings.defaultIcon"
         />
       </l-map>
@@ -62,12 +62,11 @@
 </template>
 
 <script>
-import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
-import { getMarkerPosition } from "@/plugins/LeafletHelpers.js";
+import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
 import db, { GeoPoint, objectsRef } from "@/plugins/Firebase.js";
 
 export default {
-  name: 'AddingForm',
+  name: "AddingForm",
   components: {
     LMap,
     LTileLayer,
@@ -87,34 +86,47 @@ export default {
   data() {
     return {
       objectForm: {
-        name: '',
-        artist: '',
-        description: '',
-        img: ''
+        name: "",
+        artist: "",
+        description: "",
+        img: ""
       },
       imgFile: null,
       artists: [],
       isAdding: false
-    }
+    };
   },
   firestore() {
     const artists = db.collection(process.env.VUE_APP_FIRESTORE_ARTISTS_REF);
 
     return {
       artists
-    }
+    };
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate(async (valid) => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
           this.isAdding = true;
 
           const name = this.objectForm.name;
           const description = this.objectForm.description;
           const createdAt = new Date();
-          const position = new GeoPoint(this.addingPointPosition.lat, this.addingPointPosition.lng);
-          const artist = this.objectForm.artist ? db.doc(`${process.env.VUE_APP_FIRESTORE_ARTISTS_REF}/${this.objectForm.artist}`) : db.doc(`${process.env.VUE_APP_FIRESTORE_ARTISTS_REF}/${process.env.VUE_APP_FIRESTORE_UNKNOWN_ARTISTS_REF}`);
+          const position = new GeoPoint(
+            this.addingPointPosition.lat,
+            this.addingPointPosition.lng
+          );
+          const artist = this.objectForm.artist
+            ? db.doc(
+                `${process.env.VUE_APP_FIRESTORE_ARTISTS_REF}/${
+                  this.objectForm.artist
+                }`
+              )
+            : db.doc(
+                `${process.env.VUE_APP_FIRESTORE_ARTISTS_REF}/${
+                  process.env.VUE_APP_FIRESTORE_UNKNOWN_ARTISTS_REF
+                }`
+              );
           const imgName = await this.uploadImg();
 
           await db.collection(process.env.VUE_APP_FIRESTORE_OBJECTS_REF).add({
@@ -131,28 +143,25 @@ export default {
       });
     },
     closeForm(formName) {
-      this.resetForm(formName)
+      this.resetForm(formName);
       this.closeAddingForm();
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-      document.querySelector('.uploadImg input').value = '';
-    },
-    getPosition(position) {
-      return getMarkerPosition(position.lat, position.lng)
+      document.querySelector(".uploadImg input").value = "";
     },
     doneAdding(formName) {
       this.isAdding = false;
       this.closeForm(formName);
-      this.$store.commit('disableAddingPoint');
+      this.$store.commit("disableAddingPoint");
     },
     getFile() {
-      const file = document.querySelector('.uploadImg input').files[0];
+      const file = document.querySelector(".uploadImg input").files[0];
       this.imgFile = file;
     },
     async uploadImg() {
       const file = this.imgFile;
-      const name = `${(+new Date())} - ${file.name}`;
+      const name = `${+new Date()} - ${file.name}`;
       const metadata = {
         contentType: file.type
       };
@@ -161,7 +170,7 @@ export default {
       return name;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
