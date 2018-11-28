@@ -1,0 +1,15 @@
+// Normalize
+@import "normalize-scss";
+@include normalize();
+
+// Settings
+@import "settings.scss";
+
+// Font
+@import url("https://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic");
+
+// Main styles
+
+body {
+  font-family: $primary-font-family;
+}
