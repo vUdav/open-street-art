@@ -14,7 +14,8 @@ export default new Vuex.Store({
       isAddingPoint: false
     },
     layerSettings: {
-      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      url:
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png",
       attribution:
         "&copy; <a href='http://osm.org/copyrighte'>OpenStreetMap</a> contributors"
     },
