@@ -9,13 +9,17 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@commitlint/cli": "^7.2.1",
     "bugsnag-js": "^4.7.3",
     "bugsnag-vue": "^1.0.1",
+    "cz-customizable": "^5.3.0",
     "element-ui": "^2.4.5",
     "firebase": "^5.5.8",
+    "husky": "^1.2.0",
     "normalize-scss": "^7.0.1",
     "vue": "^2.5.17",
     "vue2-leaflet": "^1.2.3",
+    "vue2-leaflet-markercluster": "^2.1.2",
     "vuefire": "^2.0.0-alpha.15",
     "vuex": "^3.0.1"
   },
@@ -57,5 +61,18 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "config/git/commitizen.js"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS -g './config/git/commitlint.js'"
+    }
+  }
 }
