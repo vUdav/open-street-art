@@ -35,7 +35,7 @@ export default {
   },
 
   mounted() {
-    this.mapObject = L.control.locate();
+    this.mapObject = L.control.locate(this.options);
     DomEvent.on(this.mapObject, this.$listeners);
     propsBinder(this, this.mapObject, props);
     this.ready = true;
