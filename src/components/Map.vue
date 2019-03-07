@@ -6,6 +6,7 @@
       :class="['map', { 'map--adding-point': $store.state.mapSettings.isAddingPoint }]"
       @click="clickOnMap"
     >
+      <locate-control/>
       <l-tile-layer
         :url="$store.state.layerSettings.url"
         :attribution="$store.state.layerSettings.attribution"
@@ -41,6 +42,7 @@ import Vue2LeafletMarkerCluster from "vue2-leaflet-markercluster";
 import db from "@/plugins/Firebase.js";
 import Detail from "@/components//Detail";
 import AddingForm from "@/components/AddingForm";
+import LocateControl from "@/components/LocateControl";
 
 export default {
   name: "Map",
@@ -50,6 +52,7 @@ export default {
     LMarker,
     Detail,
     AddingForm,
+    LocateControl,
     "v-marker-cluster": Vue2LeafletMarkerCluster
   },
   data() {
