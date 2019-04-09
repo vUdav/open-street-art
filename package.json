@@ -17,6 +17,7 @@
     "firebase": "^5.5.8",
     "font-awesome": "^4.7.0",
     "husky": "^1.2.0",
+    "js-yaml": "^3.13.1",
     "leaflet.locatecontrol": "^0.66.2",
     "normalize-scss": "^7.0.1",
     "vue": "^2.5.17",
